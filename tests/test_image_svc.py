@@ -19,9 +19,15 @@ def test_create(grid=(2, 2)):
     
     res = response.json()
     
-    assert type(res["images"]) is type([])
+    images = res["images"]
     
-    assert len(res["images"]) == grid[0] * grid[1]
+    assert isinstance(images, list)
+    
+    assert len(images) == grid[0] * grid[1]
+    
+    for img_url in images:
+        # assert validators.url(img_url) //FIXME after Azure Integration...
+        pass
 
 
 def test_table_create():
