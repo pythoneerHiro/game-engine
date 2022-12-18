@@ -33,7 +33,7 @@ def sliceImage(img: Image.Image, grid: Tuple[int, int]) -> List[Image.Image]:
     
     ic(out)
     
-    src_image = f"{out}/orig.img"
+    src_image = f"{out}/product.img"
     
     img.save(src_image)
     

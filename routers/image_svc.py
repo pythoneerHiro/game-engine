@@ -1,3 +1,5 @@
+from typing import NamedTuple, Tuple
+
 from fastapi import APIRouter
 from pydantic import BaseModel
 
@@ -7,9 +9,14 @@ from utils.upload_azure import uploadAzureBlobStorage
 router = APIRouter(tags=["image  processing"])
 
 
+class Grid(NamedTuple):
+    row: int
+    column: int
+
+
 class Product(BaseModel):
     url: str
-    grid: (int, int)  # FIXME
+    grid: Tuple[int, int]  # FIXME pass Grid
 
 
 @router.get("/")
