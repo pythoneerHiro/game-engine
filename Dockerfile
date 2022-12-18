@@ -10,4 +10,4 @@ COPY . /code
 
 EXPOSE 80
 
-ENTRYPOINT ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80","--workers","10"]
+ENTRYPOINT ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80","--workers","1"]
