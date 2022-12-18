@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: game-engine
+  namespace: bzinga
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 5
+  revisionHistoryLimit: 1000
+  selector:
+    matchLabels:
+      app: game-engine
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: game-engine
+    spec:
+      containers:
+        image: bzinfdevqacr.azurecr.io/game-engine:latest
+        imagePullPolicy: Always
+        name: game-engine
+        ports:
+          - containerPort: 80
+            name: external
+            protocol: TCP
+        resources:
+          limits:
+            cpu: "1"
+            memory: 2Gi
+          requests:
+            cpu: 500m
+            memory: 756Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: { }
+      terminationGracePeriodSeconds: 30
