@@ -7,9 +7,7 @@ metadata:
   namespace: bzinga
 spec:
   allocateLoadBalancerNodePorts: true
-  clusterIP: 10.0.161.161
-  clusterIPs:
-    - 10.0.160.16
+  clusterIP: 10.0.09.02
   externalTrafficPolicy: Cluster
   internalTrafficPolicy: Cluster
   ipFamilies:
@@ -17,12 +15,10 @@ spec:
   ipFamilyPolicy: SingleStack
   ports:
     - name: https
-      #      nodePort: 32036
       port: 443
       protocol: TCP
       targetPort: 80
     - name: http
-      #      nodePort: 32037
       port: 80
       protocol: TCP
       targetPort: 8000
