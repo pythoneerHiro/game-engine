@@ -9,7 +9,7 @@ router = APIRouter(tags=["image  processing"])
 
 class Product(BaseModel):
     url: str
-    grid: (int, int)
+    grid: (int, int)  # FIXME
 
 
 @router.get("/")
