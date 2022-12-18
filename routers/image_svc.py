@@ -1,13 +1,41 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 
-router = APIRouter(prefix='/imago', tags=['image  processing'])
+from utils.image import retrieveImage, sliceImage
+from utils.upload_azure import uploadAzureBlobStorage
+
+router = APIRouter(tags=["image  processing"])
 
 
 class Product(BaseModel):
     url: str
+    grid: (int, int)
 
 
-@router.post("/")
+@router.get("/")
+async def home():
+    return {"message": "image_svc up & running"}
+
+
+@router.post("/tile")
 async def create(product: Product):
-    pass
+    imgs = []
+    
+    res = {
+        "images": imgs
+    }
+    
+    product_url = product.url
+    
+    product_img = retrieveImage(product_url)
+    
+    _images = sliceImage(product_img, product.grid)
+    
+    imgs = [i.filename for i in _images]  # upload to s3 bucket
+    
+    for i in imgs:
+        img = i.filename
+        img_url = uploadAzureBlobStorage("game-puzzle", img)
+        imgs.append(img_url)
+    
+    return res
