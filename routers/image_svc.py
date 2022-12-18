@@ -38,9 +38,7 @@ async def create(product: Product):
     
     _images = sliceImage(product_img, product.grid)
     
-    imgs = [i.filename for i in _images]  # upload to s3 bucket
-    
-    for i in imgs:
+    for i in _images:
         img = i.filename
         img_url = uploadAzureBlobStorage("game-puzzle", img)
         imgs.append(img_url)
