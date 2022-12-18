@@ -5,7 +5,7 @@ TARGET_REPOSITORY := "gaming" #temporarily using gaming registry
 
 
 docker-build:
-	docker build -f Dockerfile --tag bzinga-game-engine:${TAG} .
+	docker build --squash -f Dockerfile --tag bzinga-game-engine:${TAG} .
 push:
 	az acr login --name  bzinfdevqacr
 	docker tag ${TARGET_REPOSITORY}:${TAG} ${AZ_REPO_LINK}/${TARGET_REPOSITORY}:${TAG}
