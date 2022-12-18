@@ -24,7 +24,7 @@ def sliceImage(img: Image.Image, grid: Tuple[int, int]) -> List[Image.Image]:
     out = f"../static/temp/{folder}"
     
     try:
-        os.mkdir(out)
+        os.makedirs(out)
     except FileExistsError:
         return sliceImage(img)
     except Exception as e:
