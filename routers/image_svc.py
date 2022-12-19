@@ -41,13 +41,13 @@ async def create(product: Product):
     
     _images = sliceImage(product_img, product.grid)
     
-    today = datetime.now()
+    today = datetime.now().strftime("%d.%m.%Y.%H.%M.%S")
     
-    today_formated = today.strftime("%d.%m.%Y.%H.%M.%S")
+    today_seed = f"{today}-{randomStringGen(3)}"
     
     for i in _images:
         img = i.filename
-        custom_filename = f"{today_formated}-{randomStringGen(3)}--{os.path.basename(img)}"
+        custom_filename = f"{today_seed}-{os.path.basename(img)}"
         
         img_url = uploadAzureBlobStorage(img, custom_filename)
         imgs.append(img_url)
