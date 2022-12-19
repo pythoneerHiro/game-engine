@@ -47,9 +47,11 @@ async def create(product: Product):
     
     for i in _images:
         img = i.filename
-        custom_filename = f"{today_seed}-{os.path.basename(img)}"
+        img_name = os.path.basename(img)
+        img_format = img_name.split('.')[-1]
+        custom_filename = f"{today_seed}-{img_name}"
         
-        img_url = uploadAzureBlobStorage(img, custom_filename)
+        img_url = uploadAzureBlobStorage(img, custom_filename, f"image/{img_format}")
         imgs.append(img_url)
     
     return res
