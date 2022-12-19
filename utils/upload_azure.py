@@ -12,8 +12,6 @@ container_name = environ["container_name"]
 
 
 def uploadAzureBlobStorage(file_path, file_name) -> str:
-    ic(connection_string)
-    ic(container_name)
     blob_service_client = BlobServiceClient.from_connection_string(connection_string)
     blob_client = blob_service_client.get_blob_client(container=container_name, blob=file_name)
     with open(file_path, "rb") as data:
