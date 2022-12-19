@@ -9,7 +9,7 @@ from utils.upload_azure import uploadAzureBlobStorage
 
 router = APIRouter(tags=["image  processing"])
 
-from datetime import date
+from datetime import datetime
 
 
 class Grid(NamedTuple):
@@ -41,7 +41,7 @@ async def create(product: Product):
     
     _images = sliceImage(product_img, product.grid)
     
-    today = date.today()
+    today = datetime.now()
     
     today_formated = today.strftime("%d.%m.%Y %H:%M:%S")
     
