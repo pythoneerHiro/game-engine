@@ -18,7 +18,32 @@ spec:
         app: game-engine
     spec:
       containers:
-        - name: game-engine
+        - env:
+            - name: ENV
+              value: DEV
+            - name: MODE
+              value: SERVER
+            - name: PORT
+              value: "80"
+
+            - name: storage_account_name
+              value: bzdevstorageaccount
+            - name: container_name
+              value: game-engine
+            - name: connection_string
+              valueFrom:
+                secretKeyRef:
+                  name: azure-blob
+                  key: connection_string
+                  optional: false
+            - name: storage_account_key
+              valueFrom:
+                secretKeyRef:
+                  name: azure-blob
+                  key: storage_account_key
+                  optional: true
+
+          name: game-engine
           image: bzinfdevqacr.azurecr.io/game-engine:latest
           imagePullPolicy: Always
           ports:
