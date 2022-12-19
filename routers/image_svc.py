@@ -43,7 +43,7 @@ async def create(product: Product):
     
     today = datetime.now()
     
-    today_formated = today.strftime("%d.%m.%Y %H:%M:%S")
+    today_formated = today.strftime("%d.%m.%Y.%H.%M.%S")
     
     for i in _images:
         img = i.filename
