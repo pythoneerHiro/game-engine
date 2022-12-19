@@ -1,12 +1,10 @@
-from os import environ
-
 from azure.storage.blob import BlobServiceClient
 from icecream import ic
 
-storage_account_key = environ["storage_account_key"]
-storage_account_name = environ["storage_account_name"]
-connection_string = environ["connection_string"]
-container_name = environ["container_name"]
+storage_account_key = "RfkDC1yVo40Wiixh6QkrH4hqm7gWPsx8b9F+WWIu1yONJLDReaA+EkdbCdR/lnNER4Prvx80Hp9w+AStNp4eqQ=="
+storage_account_name = "bzdevstorageaccount"
+connection_string = "DefaultEndpointsProtocol=https;AccountName=bzdevstorageaccount;AccountKey=RfkDC1yVo40Wiixh6QkrH4hqm7gWPsx8b9F+WWIu1yONJLDReaA+EkdbCdR/lnNER4Prvx80Hp9w+AStNp4eqQ==;EndpointSuffix=core.windows.net"
+container_name = "game-engine"
 
 
 def uploadAzureBlobStorage(file_path, file_name) -> str:
