@@ -10,6 +10,8 @@ def test_home():
 
 
 def test_create(grid=(2, 2)):
+    import validators
+    
     response = client.post("/image/tile", json={
         "url":  "https://static.wikia.nocookie.net/big-hero-6-fanon/images/0/0f/Hiro.jpg/revision/latest?cb=20180511180437",
         "grid": grid
@@ -26,8 +28,7 @@ def test_create(grid=(2, 2)):
     assert len(images) == grid[0] * grid[1]
     
     for img_url in images:
-        # assert validators.url(img_url) //FIXME after Azure Integration...
-        pass
+        assert validators.url(img_url)
 
 
 def test_table_create():
