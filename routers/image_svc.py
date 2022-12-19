@@ -1,3 +1,4 @@
+import os
 from typing import NamedTuple, Tuple
 
 from fastapi import APIRouter
@@ -7,6 +8,8 @@ from utils.image import retrieveImage, sliceImage
 from utils.upload_azure import uploadAzureBlobStorage
 
 router = APIRouter(tags=["image  processing"])
+
+from datetime import date
 
 
 class Grid(NamedTuple):
@@ -38,9 +41,15 @@ async def create(product: Product):
     
     _images = sliceImage(product_img, product.grid)
     
+    today = date.today()
+    
+    today_formated = today.strftime("%d.%m.%Y %H:%M:%S")
+    
     for i in _images:
         img = i.filename
-        img_url = uploadAzureBlobStorage("game-puzzle", img)
+        custom_filename = f"{today_formated}-{os.path.basename(img)}"
+        
+        img_url = uploadAzureBlobStorage(img, custom_filename)
         imgs.append(img_url)
     
     return res
