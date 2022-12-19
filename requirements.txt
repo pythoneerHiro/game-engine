@@ -2,10 +2,11 @@ fastapi~=0.88.0
 Pillow~=7.2.0
 uvicorn~=0.20.0
 pydantic~=1.10.2
-icecream
+icecream~=2.1.3
 numpy
 httpx
 image-slicer
 pytest
 requests
-typing
+typing~=3.7.4.3
+azure-storage-blob
