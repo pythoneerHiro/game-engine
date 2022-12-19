@@ -1,15 +1,15 @@
 import os
+from datetime import datetime
 from typing import NamedTuple, Tuple
 
 from fastapi import APIRouter
 from pydantic import BaseModel
 
 from utils.image import retrieveImage, sliceImage
+from utils.random import randomStringGen
 from utils.upload_azure import uploadAzureBlobStorage
 
 router = APIRouter(tags=["image  processing"])
-
-from datetime import datetime
 
 
 class Grid(NamedTuple):
@@ -47,7 +47,7 @@ async def create(product: Product):
     
     for i in _images:
         img = i.filename
-        custom_filename = f"{today_formated}-{os.path.basename(img)}"
+        custom_filename = f"{today_formated}-{randomStringGen(3)}--{os.path.basename(img)}"
         
         img_url = uploadAzureBlobStorage(img, custom_filename)
         imgs.append(img_url)
