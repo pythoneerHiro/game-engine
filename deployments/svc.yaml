@@ -7,7 +7,7 @@ metadata:
   namespace: bzinga
 spec:
   allocateLoadBalancerNodePorts: true
-  clusterIP: 10.0.09.02
+  clusterIP: 10.0.09.03
   externalTrafficPolicy: Cluster
   internalTrafficPolicy: Cluster
   ipFamilies:
