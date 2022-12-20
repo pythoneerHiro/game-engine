@@ -1,8 +1,12 @@
+from os import environ
+
 from fastapi import FastAPI
 
 from routers import image_svc
 
-app = FastAPI()
+debug = environ.get("debug", False)
+
+app = FastAPI(debug=debug)
 app.include_router(image_svc.router, prefix="/image")
 
 
