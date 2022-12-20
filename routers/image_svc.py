@@ -30,8 +30,6 @@ async def home():
 
 @router.post("/tile")
 async def create(product: Product):
-    imgs = []
-    
     product_url = product.url
     
     product_img = retrieveImage(product_url)
