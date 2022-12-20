@@ -1,5 +1,6 @@
 import os
 from datetime import datetime
+from io import BytesIO
 from typing import NamedTuple, Tuple
 
 from dask import compute
@@ -69,16 +70,24 @@ async def create(product: Product):
     _images = sliceImage1(product_img, product.grid)
     
     today = datetime.now().strftime("%d.%m.%Y.%H.%M.%S")
-    
     today_seed = f"{today}-{randomStringGen(3)}"
     
     delayed_obj = []
     
-    for image in _images:
-        img_format = image.format
-        custom_filename = f"{today_seed}-{img_format}"
+    img_format = product_img.format
+    
+    for i in range(len(_images)):
+        image = _images[i]
+        img_name = f"{i}.{img_format}"
+        custom_filename = f"{today_seed}-{img_name}"
         
-        img_url = uploadBlobDirectly(image, custom_filename, f"image/{img_format}")
+        # with BytesIO() as image_data:
+        #     image.save(image_data, format=img_format)
+        #     data = output.getvalue()
+        image_data = BytesIO()
+        image.save(image_data, format=img_format)
+        
+        img_url = uploadBlobDirectly(image_data.getvalue(), custom_filename, f"image/{img_format}")
         delayed_obj.append(img_url)
     
     images = compute(*delayed_obj)
