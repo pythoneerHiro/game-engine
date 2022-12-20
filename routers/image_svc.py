@@ -8,7 +8,8 @@ from pydantic import BaseModel
 
 from utils.image import retrieveImage, sliceImage
 from utils.random import randomStringGen
-from utils.upload_azure import uploadAzureBlobStorage
+from utils.tile_images import sliceImage1
+from utils.upload_azure import uploadAzureBlobStorage, uploadBlobDirectly
 
 router = APIRouter(tags=["image  processing"])
 
@@ -51,9 +52,38 @@ async def create(product: Product):
         img_url = uploadAzureBlobStorage(img, custom_filename, f"image/{img_format}")
         delayed_obj.append(img_url)
     
-    imgs = list(compute(delayed_obj))
+    imgs = compute(*delayed_obj)
     
     res = {
         "images": imgs
+    }
+    return res
+
+
+@router.post("/v1/tile")
+async def create(product: Product):
+    product_url = product.url
+    
+    product_img = retrieveImage(product_url)
+    
+    _images = sliceImage1(product_img, product.grid)
+    
+    today = datetime.now().strftime("%d.%m.%Y.%H.%M.%S")
+    
+    today_seed = f"{today}-{randomStringGen(3)}"
+    
+    delayed_obj = []
+    
+    for image in _images:
+        img_format = image.format
+        custom_filename = f"{today_seed}-{img_format}"
+        
+        img_url = uploadBlobDirectly(image, custom_filename, f"image/{img_format}")
+        delayed_obj.append(img_url)
+    
+    images = compute(*delayed_obj)
+    
+    res = {
+        "images": images
     }
     return res

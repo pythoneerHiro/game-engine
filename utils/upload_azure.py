@@ -22,3 +22,14 @@ def uploadAzureBlobStorage(file_path, file_name, content_type="application/octet
         blob_client.upload_blob(data, overwrite=True, content_settings=content_settings)
         ic(f"uploaded {file_name}.")
     return blob_client.url
+
+
+@delayed
+def uploadBlobDirectly(data, file_name, content_type="application/octet-stream") -> str:
+    blob_service_client = BlobServiceClient.from_connection_string(connection_string)
+    blob_client = blob_service_client.get_blob_client(container=container_name, blob=file_name)
+    content_settings = ContentSettings(content_type=content_type)
+    # ic(f'setting the content type : {content_type}')
+    blob_client.upload_blob(data, overwrite=True, content_settings=content_settings)
+    ic(f"uploaded {file_name}.")
+    return blob_client.url
