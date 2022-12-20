@@ -2,6 +2,7 @@ import os
 from datetime import datetime
 from typing import NamedTuple, Tuple
 
+from dask import compute
 from fastapi import APIRouter
 from pydantic import BaseModel
 
@@ -31,10 +32,6 @@ async def home():
 async def create(product: Product):
     imgs = []
     
-    res = {
-        "images": imgs
-    }
-    
     product_url = product.url
     
     product_img = retrieveImage(product_url)
@@ -45,6 +42,8 @@ async def create(product: Product):
     
     today_seed = f"{today}-{randomStringGen(3)}"
     
+    delayed_obj = []
+    
     for i in _images:
         img = i.filename
         img_name = os.path.basename(img)
@@ -52,6 +51,11 @@ async def create(product: Product):
         custom_filename = f"{today_seed}-{img_name}"
         
         img_url = uploadAzureBlobStorage(img, custom_filename, f"image/{img_format}")
-        imgs.append(img_url)
+        delayed_obj.append(img_url)
     
+    imgs = list(compute(delayed_obj))
+    
+    res = {
+        "images": imgs
+    }
     return res

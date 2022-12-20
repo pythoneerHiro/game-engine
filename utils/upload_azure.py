@@ -2,6 +2,7 @@ import json
 from os import environ
 
 from azure.storage.blob import BlobServiceClient, ContentSettings
+from dask import delayed
 from icecream import ic
 
 storage_account_key = environ["storage_account_key"]
@@ -11,6 +12,7 @@ connection_string = json.loads(environ["connection_string"])
 container_name = environ["container_name"]
 
 
+@delayed
 def uploadAzureBlobStorage(file_path, file_name, content_type="application/octet-stream") -> str:
     blob_service_client = BlobServiceClient.from_connection_string(connection_string)
     blob_client = blob_service_client.get_blob_client(container=container_name, blob=file_name)

@@ -10,3 +10,4 @@ pytest
 requests
 typing~=3.7.4.3
 azure-storage-blob
+dask
