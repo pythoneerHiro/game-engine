@@ -1,4 +1,3 @@
-import pytest
 from dask import compute, delayed
 from icecream import ic
 
@@ -11,8 +10,7 @@ def test_home():
     assert response.json() == {"message": "image_svc up & running"}
 
 
-@pytest.mark.asyncio
-async def test_create(grid=(2, 2)):
+def test_create(grid=(2, 2)):
     import validators
     
     @delayed
@@ -48,6 +46,10 @@ async def test_create(grid=(2, 2)):
 def test_table_create():
     grids = [(2, 2), (3, 3), (4, 4)]
     
+    delayed_obj = []
+    
     for grid in grids:
         ic(grid)
-        test_create(grid)
+        delayed_obj.append(test_create(grid))
+    
+    compute(*delayed_obj)
