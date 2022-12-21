@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 from io import BytesIO
-from typing import NamedTuple, Tuple
+from typing import List, NamedTuple, Tuple
 
 from dask import compute
 from fastapi import APIRouter
@@ -26,13 +26,18 @@ class Product(BaseModel):
     grid: Tuple[int, int]  # FIXME pass Grid
 
 
+class Images(BaseModel):
+    images: List[str]
+    grid: Tuple[int, int]
+
+
 @router.get("/")
 async def home():
     return {"message": "image_svc up & running"}
 
 
 @router.post("/tile")
-async def create(product: Product):
+async def split(product: Product):
     product_url = product.url
     
     product_img = retrieveImage(product_url)
@@ -62,8 +67,24 @@ async def create(product: Product):
     return res
 
 
+@router.post("/join")
+async def join(images: Images):
+    from image_slicer import join
+    
+    from fastapi.responses import Response
+    
+    images = [retrieveImage(img) for img in images.images]
+    
+    combined_image = join(images)
+    
+    with BytesIO() as image_data:
+        combined_image.save(image_data, format("jpeg"))
+    
+    return Response(content=image_data, media_type="image/jpeg")
+
+
 @router1.post("/tile")
-async def create(product: Product):
+async def split(product: Product):
     product_url = product.url
     
     product_img = retrieveImage(product_url)
