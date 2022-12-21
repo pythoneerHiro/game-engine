@@ -13,6 +13,7 @@ from utils.tile_images import sliceImage1
 from utils.upload_azure import uploadAzureBlobStorage, uploadBlobDirectly
 
 router = APIRouter(tags=["image  processing"])
+router1 = APIRouter(tags=["image processing v1"])
 
 
 class Grid(NamedTuple):
@@ -61,7 +62,7 @@ async def create(product: Product):
     return res
 
 
-@router.post("/v1/tile")
+@router1.post("/tile")
 async def create(product: Product):
     product_url = product.url
     

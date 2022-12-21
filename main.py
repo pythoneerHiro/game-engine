@@ -8,6 +8,7 @@ debug = environ.get("debug", False)
 
 app = FastAPI(debug=debug)
 app.include_router(image_svc.router, prefix="/image")
+app.include_router(image_svc.router1, prefix="/image/v1")
 
 
 @app.get("/")
