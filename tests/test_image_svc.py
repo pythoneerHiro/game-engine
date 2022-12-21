@@ -1,3 +1,5 @@
+import pytest
+from dask import compute, delayed
 from icecream import ic
 
 from . import client
@@ -9,26 +11,38 @@ def test_home():
     assert response.json() == {"message": "image_svc up & running"}
 
 
-def test_create(grid=(2, 2)):
+@pytest.mark.asyncio
+async def test_create(grid=(2, 2)):
     import validators
     
-    response = client.post("/image/tile", json={
-        "url":  "https://static.wikia.nocookie.net/big-hero-6-fanon/images/0/0f/Hiro.jpg/revision/latest?cb=20180511180437",
-        "grid": grid
-    })
+    @delayed
+    def _test_image_url(url: str):
+        response = client.post(url, json={
+            "url":  "https://static.wikia.nocookie.net/big-hero-6-fanon/images/0/0f/Hiro.jpg/revision/latest?cb=20180511180437",
+            "grid": grid
+        })
+        
+        assert response.status_code == 200
+        
+        res = response.json()
+        
+        images = res["images"]
+        
+        assert isinstance(images, list)
+        
+        assert len(images) == grid[0] * grid[1]
+        
+        for img_url in images:
+            assert validators.url(img_url)
     
-    assert response.status_code == 200
+    urls = ["/image/tile", "/image/v1/tile"]
     
-    res = response.json()
+    delayed_obj = []
     
-    images = res["images"]
-    
-    assert isinstance(images, list)
-    
-    assert len(images) == grid[0] * grid[1]
-    
-    for img_url in images:
-        assert validators.url(img_url)
+    for url in urls:
+        d = _test_image_url(url)
+        delayed_obj.append(d)
+    compute(*delayed_obj)
 
 
 def test_table_create():
