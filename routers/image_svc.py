@@ -5,6 +5,7 @@ from typing import List, NamedTuple, Tuple
 
 from dask import compute
 from fastapi import APIRouter
+from PIL import Image
 from pydantic import BaseModel
 
 from utils.image import retrieveImage, sliceImage
@@ -68,17 +69,47 @@ async def split(product: Product):
 
 
 @router.post("/join")
-async def join(images: Images):
+async def join(req: Images):
+    from fastapi.responses import Response
+    
+    grid = req.grid
+    
+    images = [retrieveImage(img) for img in req.images]
+    
+    h, w = images[0].size
+    combined_image = Image.new('RGB', (grid[0] * h, grid[1] * w), (250, 250, 250))
+    
+    positions = [(x, y) for x in range(grid[1]) for y in range(grid[0])]
+    
+    for pos in positions:
+        x, y = pos
+        img = images.pop(0)
+        final_pos = (w * (1 + x), h * (1 + y))
+        # img.show()
+        combined_image.paste(img, final_pos)
+    
+    image_data = BytesIO()
+    combined_image.save(image_data, format("jpeg"))
+    
+    # combined_image.show()
+    # return StreamingResponse(content=image_data, media_type="image/jpeg")
+    return Response(content=image_data.getvalue(), media_type="image/jpeg")
+
+
+@router1.post("/join")
+async def join(req: Images):
     from image_slicer import join
     
     from fastapi.responses import Response
     
-    images = [retrieveImage(img) for img in images.images]
+    images = [retrieveImage(img) for img in req.images]
     
     combined_image = join(images)
     
     with BytesIO() as image_data:
         combined_image.save(image_data, format("jpeg"))
+    
+    combined_image.show()
     
     return Response(content=image_data, media_type="image/jpeg")
 
