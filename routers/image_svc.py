@@ -71,6 +71,7 @@ async def split(product: Product):
 @router.post("/join")
 async def join(req: Images):
     from fastapi.responses import Response
+    from icecream import ic
     
     grid = req.grid
     
@@ -84,9 +85,11 @@ async def join(req: Images):
     for pos in positions:
         x, y = pos
         img = images.pop(0)
-        final_pos = (w * (1 + x), h * (1 + y))
+        final_pos = (y * (1 + w), x * (1 + h))
+        ic(final_pos)
         # img.show()
         combined_image.paste(img, final_pos)
+        combined_image.show()
     
     image_data = BytesIO()
     combined_image.save(image_data, format("jpeg"))
