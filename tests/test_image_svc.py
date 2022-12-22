@@ -10,7 +10,7 @@ def test_home():
     assert response.json() == {"message": "image_svc up & running"}
 
 
-def test_create(grid=(2, 2)):
+def test_split(grid=(2, 2)):
     import validators
     
     @delayed
@@ -43,13 +43,16 @@ def test_create(grid=(2, 2)):
     compute(*delayed_obj)
 
 
-def test_table_create():
+def test_table_split():
     grids = [(2, 2), (3, 3), (4, 4)]
     
     delayed_obj = []
     
     for grid in grids:
         ic(grid)
-        delayed_obj.append(test_create(grid))
+        delayed_obj.append(test_split(grid))
     
     compute(*delayed_obj)
+
+# def test_join(grid=(2,2)):
+#
